@@ -80,4 +80,4 @@ writePoly (Poly vs) = do
         writeFile "triangulacion.obj" content
 
 main :: IO ()
-main = irregular 1 200 >>= print . triangulate
+main = irregular 1 3600 >>= print . triangulate
