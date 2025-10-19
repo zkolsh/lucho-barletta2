@@ -43,13 +43,20 @@
 	\pdfpageheight=\paperheight
 \fi
 
+\ifx\corsageclass\article
+	\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
+	\newcommand{\sectionbreak}{\cleardoublepage}
+\else
+	\renewcommand{\sectionmark}[1]{\markboth{\textit{#1}}{}}
+\fi
+
 \pagestyle{fancy}
 \fancyhf{}
 
 \fancyhead[C]{\decoone}
 \fancyhead[LE, RO]{\thepage}
 \fancyhead[LO]{\leafSE{} \nouppercase{\it\leftmark}}
-\fancyhead[RE]{\nouppercase{\it\rightmark} \leafSW}
+\fancyhead[RE]{\nouppercase{\it Programación II} \leafSW}
 
 \let\oldcleardoublepage\cleardoublepage
 \renewcommand{\cleardoublepage}{%
@@ -59,9 +66,3 @@
 	\fi%
 	\oldcleardoublepage%
 }
-
-\ifx\corsageclass\article
-	\renewcommand{\sectionmark}[1]{\markboth{#1}{}}
-	\newcommand{\sectionbreak}{\cleardoublepage}
-\else
-\fi

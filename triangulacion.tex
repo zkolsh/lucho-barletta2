@@ -2,11 +2,13 @@
 
 \usepackage[spanish]{babel}
 \usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
 \usepackage{hyperref}
 \usepackage{indentfirst}
+\usepackage{microtype}
 \usepackage{minted}
 \usepackage{tcolorbox}
 \usepackage{xcolor}
@@ -28,6 +30,11 @@
 \hypersetup{
     pdftitle={3ds min 2026},
     pdfauthor={Autodesc}
+}
+
+\setminted{
+	encoding=utf8,
+	ignorelexererrors=true
 }
 
 \makeatletter
@@ -123,7 +130,7 @@
 	\begin{itemize}
 		\item \textbf{Si $N < 3$}, no tenemos suficientes vértices para formar ningún triángulo.  Por lo tanto, el costo de la triangulación debe ser cero.  (Definición \ref{def-tri})
 		\item \textbf{Si $N = 3$}, hay exactamente un sólo triángulo que se puede formar con estos vertices, y por lo tanto, el costo de la triangulación será igual a $w(\Delta{v_i,v_{i+1},v_j})$.
-		\item \textbf{Si $N > 3$}, hay más de una forma de triangular este polígono, por lo tanto, debemos elegir aquella con el menor costo.  Para cualquier $k \in [i + 1; j - 1]$, podemos trazar el triángulo $\Delta(v_i,v_k,v_j)$ que separa además a $P$ en dos subpolígonos $P_{i,k}$ y $P_{k,j}$.  Estos polígonos tienen $N_1 = 1 + i + k$ y $N_2 = 1 + k + j$ vértices respectivamente.
+		\item \textbf{Si $N > 3$}, hay más de una forma de triangular este polígono, por lo tanto, debemos elegir aquella con el menor costo.  Para cualquier $k \in [i + 1; j - 1]$, podemos trazar el triángulo $\Delta(v_i,v_k,v_j)$ que separa además a $P$ en dos subpolígonos $P_{i,k}$ y $P_{k,j}$.  Estos polígonos tienen $N_1 = 1 + k - i$ y $N_2 = 1 + j - k$ vértices respectivamente.
 
 			Dado que $i < k < j$, y que $N > 3$, ambos subpolígonos deben tener como mínimo 2 vértices, y a lo sumo uno de ellos tendrá $N - 1$ vértices.  Por lo tanto, se puede aplicar la Hipótesis Inductiva para afirmar que $\cost{i, k}$ y $\cost{k, j}$ representan los costos mínimos de las triangulaciones óptimas de ambos subpolígonos.
 
@@ -160,6 +167,7 @@ import Data.Map.Strict ((!))
 import Data.Ord (comparing)
 import System.Process
 
+-- | ¡claro que sí!
 (¡) :: Ix i => Array i e -> i -> e
 (¡) = (Data.Array.!)
 
@@ -251,7 +259,7 @@ main = irregular 1 200 >>= print . triangulate
 	\[ \sigma = \sum_{k = 1}^n{f(h_k) \cdot \Delta x_k} \]
 
 	\[ \mathbb{T}odos\ \mathbb{P}utos \] 
-	\[especialmente\ \mathbb{FELIPE\ ISERN} \]
+	\[ especialmente\ \mathbb{FELIPE\ ISERN} \]
 
 
 \end{document}
