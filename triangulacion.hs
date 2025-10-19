@@ -20,12 +20,12 @@ infinity = 1.0 / 0.0
 
 data Vertex = Vertex !Float !Float deriving (Eq, Show)
 
-weight :: Vertex -> Vertex -> Float
-weight (Vertex x0 y0) (Vertex x1 y1) = sqrt $ sq (x0 - x1) + sq (y0 - y1)
+distance :: Vertex -> Vertex -> Float
+distance (Vertex x0 y0) (Vertex x1 y1) = sqrt $ sq (x0 - x1) + sq (y0 - y1)
         where sq x = x * x
 
-perimeter :: Vertex -> Vertex -> Vertex -> Float
-perimeter v0 v1 v2 = weight v0 v1 + weight v1 v2 + weight v2 v0
+weight :: Vertex -> Vertex -> Vertex -> Float
+weight v0 v1 v2 = distance v0 v1 + distance v1 v2 + distance v2 v0
 
 type Elements = Array Int Vertex
 
@@ -53,18 +53,18 @@ cost :: Cache -> Elements -> Int -> Int -> (Cache, Float)
 cost !cache vs !i !j
         | j < i = cost cache vs j i
         | j - i <  2 = (cache, 0.0)
-        | j - i == 2 = (cache, perimeter (vs ¡ i) (vs ¡ (i + 1)) (vs ¡ (i + 2)))
+        | j - i == 2 = (cache, weight (vs ¡ i) (vs ¡ (i + 1)) (vs ¡ (i + 2)))
         | M.member (i, j) cache = (cache, cache ! (i, j))
-        | otherwise = foldl' it (cache, infinity) options
-       where calc cache' k =
+        | otherwise = foldl' minK (cache, infinity) ks
+       where general cache' k =
                 let (!cache'', costLeft) = cost cache' vs i k
                     (cache''', costRight) = cost cache'' vs k j
-                    w = perimeter (vs ¡ i) (vs ¡ k) (vs ¡ j) + costLeft + costRight
+                    w = weight (vs ¡ i) (vs ¡ k) (vs ¡ j) + costLeft + costRight
                  in (M.insert (i, j) w cache''', w)
-             it (!cache', minW) k =
-                let (cache'', w) = calc cache' k
+             minK (!cache', minW) k =
+                let (cache'', w) = general cache' k
                  in (cache'', min w minW)
-             options = [i + 1..j - 1]
+             ks = [i + 1..j - 1]
 
 triangulate :: Poly -> Float
 triangulate (Poly !vs) = snd $ cost M.empty vs i j
