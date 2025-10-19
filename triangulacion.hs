@@ -52,13 +52,14 @@ type Cache = M.Map (Int, Int) Float
 cost :: Cache -> Elements -> Int -> Int -> (Cache, Float)
 cost !cache vs !i !j
         | j < i = cost cache vs j i
-        | j - i <= 2 = (cache, 0.0)
+        | j - i <  2 = (cache, 0.0)
+        | j - i == 2 = (cache, perimeter (vs ¡ i) (vs ¡ (i + 1)) (vs ¡ (i + 2)))
         | M.member (i, j) cache = (cache, cache ! (i, j))
         | otherwise = foldl' it (cache, infinity) options
        where calc cache' k =
                 let (!cache'', costLeft) = cost cache' vs i k
                     (cache''', costRight) = cost cache'' vs k j
-                    w = weight (vs ¡ i) (vs ¡ k) + costLeft + costRight
+                    w = perimeter (vs ¡ i) (vs ¡ k) (vs ¡ j) + costLeft + costRight
                  in (M.insert (i, j) w cache''', w)
              it (!cache', minW) k =
                 let (cache'', w) = calc cache' k
@@ -80,4 +81,4 @@ writePoly (Poly vs) = do
         writeFile "triangulacion.obj" content
 
 main :: IO ()
-main = irregular 1 3600 >>= print . triangulate
+main = irregular 1 200 >>= print . triangulate
